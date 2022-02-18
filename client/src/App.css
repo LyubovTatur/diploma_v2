@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Jura&display=swap');
+
+.App {
+  text-align: center;
+  font-family: 'Jura', sans-serif;
+  background: url('img/paper_bg(2).jpg') ;
+  -moz-background-size: 100%; /* Firefox 3.6+ */
+  -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+  -o-background-size: 100%; /* Opera 9.6+ */
+  background-size: 100%; /* Современные браузеры */
+  /*height: 100%;*/
+}
+
