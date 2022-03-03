@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 const CanvasComponent2 = (props) => {
+    const navigate = useNavigate()
     var canvas, context,
         dragging = false,
         dragStartLocation,
+        selectedImage,
         snapshot;
     let drawingStyle
     const [asyncOperation, setAsyncOperation] = useState('')
@@ -13,6 +16,7 @@ const CanvasComponent2 = (props) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
 
+    // const [snapshot,setSnapshot] = useState('')
 
     function getCanvasCoordinates(event) {
         var x = event.clientX - canvas.getBoundingClientRect().left,
@@ -22,10 +26,12 @@ const CanvasComponent2 = (props) => {
     }
 
     function takeSnapshot() {
-        snapshot = context.getImageData(0, 0, canvas.width, canvas.height);
+        updateCanvasContext()
+        snapshot = context.getImageData(0, 0, canvas.width, canvas.height)
     }
 
     function restoreSnapshot() {
+        updateCanvasContext()
         context.putImageData(snapshot, 0, 0);
     }
 
@@ -62,37 +68,59 @@ const CanvasComponent2 = (props) => {
         console.log('start drawing')
     }
 
-    const drag = (event) => {
+    const [textPos, setTextPos] = useState({x: 0, y: 0})
+
+    function choosingTextPlace(position) {
+        context.beginPath();
+        // console.log('text!')
+        // context.setLineDash([10, 20]);
+        context.fillRect(dragStartLocation.x, dragStartLocation.y, position.x - dragStartLocation.x, position.y - dragStartLocation.y);
+        // context.setLineDash([0, 0]);
+        // setTextPos({x: position.x - dragStartLocation.x, y: Math.max(position.y - dragStartLocation.y, position.y)})
+        //context.moveTo(dragStartLocation.x, dragStartLocation.y);
+        //context.lineTo(position.x, position.y);
+        //context.stroke();
+    }
+
+    // const [dragStartLocation,setDragStartLocation]=useState('')
+    function drag(event) {
         var position;
+        //console.log('драг старт позишон', dragStartLocation)
         if (dragging === true) {
-            console.log('drawing')
+            //console.log('drawing')
             position = getCanvasCoordinates(event);
-            console.log(`i see ${drawingStyle} in drawingStyle`)
+            // console.log(`i see ${drawingStyle} in drawingStyle`)
             switch (drawingStyle) {
                 case 'draw':
                     var x = event.pageX - canvas.offsetLeft;
                     var y = event.pageY - canvas.offsetTop;
-
                     // Рисуем линию до новой координаты
                     context.lineTo(x, y);
                     context.stroke();
-
                     break
                 case 'line':
                     restoreSnapshot();
-
                     drawLine(position);
                     break
                 case 'circle':
                     restoreSnapshot();
-
                     drawCircle(position);
+                    break
+                case 'rect':
+                    restoreSnapshot()
+                    choosingTextPlace(position)
                     break
 
 
             }
 
         }
+    }
+
+    function DrawUnderCanvas(imageCopy) {
+        document.getElementById('canvasunder').getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('canvasunder').getContext('2d').drawImage(imageCopy, 0, 0)
+
     }
 
     function saveCanvas() {
@@ -104,10 +132,15 @@ const CanvasComponent2 = (props) => {
         imageCopy.src = canvas.toDataURL()
         imageCopy.style.display = "inline"
         imageCopy.className = 'savedImage'
+        clearCanvas()
+        setTimeout(DrawUnderCanvas, 100, (imageCopy))
         imageCopy.onclick = () => {
-            clearCanvas()
-            context.drawImage(imageCopy, 0, 0)
+            // clearCanvas()
+            setTimeout(DrawUnderCanvas, 100, (imageCopy))
 
+            // context.drawImage(imageCopy, 0, 0)
+            selectedImage = imageCopy
+            //console.log('попытка засунуть имадж в селектед', selectedImage)
         }
 
         imagelist.appendChild(imageCopy)
@@ -119,6 +152,32 @@ const CanvasComponent2 = (props) => {
         // делая изображение видимым
         // var imageContainer = document.getElementById("savedCopyContainer");
         // imageContainer.style.display = "block";
+    }
+
+    const [drawingText, setDrawingText] = useState('')
+
+    // const [textFontSize, setTextFontSize] = useState('')
+    function TextIsReadyToBePrinted(ctxFontSize, x, y) {
+        restoreSnapshot()
+        console.log('ща нарисую')
+
+        context.font = `${ctxFontSize}px Verdana`;
+        context.fillText(drawingText, x, y);
+    }
+
+    function typingText() {
+        const position = textPos
+        setDrawingText('')
+        // setTextFontSize(Math.abs( position.y - dragStartLocation.y-4))
+        // if (textFontSize<1) setTextFontSize(1)
+        console.log('drawingtext:', drawingText)
+        console.log('position:', position)
+        console.log('starppos:', dragStartLocation)
+        let ctxFontSize = Math.abs(position.y - dragStartLocation.y - 4)
+        if (ctxFontSize < 1)
+            ctxFontSize = 1
+        TextIsReadyToBePrinted(ctxFontSize, position.x, Math.max(position.y, dragStartLocation.y))
+
     }
 
     function dragStop(event) {
@@ -133,21 +192,37 @@ const CanvasComponent2 = (props) => {
                 break
             case 'circle':
                 restoreSnapshot();
-
                 drawCircle(position);
                 break
+            case 'rect':
+                choosingTextPlace(position)
+                // document.getElementById('textDrawingInput').setAttribute('display','default')
+                //restoreSnapshot()
+                break
+        }
+        console.log('селектед имадж', selectedImage)
+        if (selectedImage !== '') {
+            console.log('селектед имадж:', selectedImage)
+            console.log('пересохраняем..')
+            const cvs = document.getElementById('canvas')
+            //const img = JSON.parse(localStorage.getItem('selectedImage'))
+            selectedImage.src = canvas.toDataURL();
         }
         console.log('drawing was ended')
     }
 
-    useEffect(  () => {
+    useEffect(() => {
+        if (document.getElementById('savedCopyContainer').childElementCount === 0) localStorage.setItem('selectedImage', '')
         canvas = document.getElementById("canvas");
         context = canvas.getContext('2d');
-        context.strokeStyle = 'yellow';
-        context.fillStyle = 'purple';
+        context.strokeStyle = 'black';
+        context.fillStyle = 'black';
         context.lineWidth = 4;
         context.lineCap = 'round';
         drawingStyle = 'draw'
+        selectedImage = ''
+
+        // document.getElementById('textDrawingInput').setAttribute('display','none')
 
         canvas.addEventListener('mousedown', dragStart, false);
         canvas.addEventListener('mousemove', drag, false);
@@ -161,7 +236,7 @@ const CanvasComponent2 = (props) => {
         context = canvas.getContext('2d');
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-        console.log(context, 'контекст очищен');
+        console.log('контекст очищен');
     }
 
     const setDrawingStyle = (style) => {
@@ -227,9 +302,9 @@ const CanvasComponent2 = (props) => {
             // xhr.send(formData);
             //
             //
-             let temp = document.getElementById('savedCopyContainer').children
+            let temp = document.getElementById('savedCopyContainer').children
 
-             const animationFrames = Array.from(temp).map((frameElem) => frameElem.getAttribute('src').split(',')[1]);
+            const animationFrames = Array.from(temp).map((frameElem) => frameElem.getAttribute('src').split(',')[1]);
             // console.log(Array.from(animationFrames).map(elem => ));
             // for (let i = 0;i<animationFrames.length;i++){
             //     const image = new Image()
@@ -248,9 +323,11 @@ const CanvasComponent2 = (props) => {
                 //myFormData: myFormData
                 animationFrames: animationFrames,
             }).then((response) => {
-                console.log('ответ сервера:',response.data)
+                console.log('ответ сервера:', response.data)
                 if (response.data == '0') {
                     console.log('успех!')
+                    alert('мультик опубликован!')
+                    navigate('/main/top')
                     // for (let dataURL in Array.from(animationFrames)){
                     //
                     //     var link = document.createElement("a");
@@ -279,7 +356,7 @@ const CanvasComponent2 = (props) => {
         let imageData = HTMLColl[0].getAttribute('src');
         let image = new Image();
         image.src = imageData;
-        window.location.href=image;
+        window.location.href = image;
 
 
         // let myFormData = new FormData();
@@ -300,28 +377,72 @@ const CanvasComponent2 = (props) => {
 
     }
 
-    return (
-        <div>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}/>
-            <input type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
-            <canvas id="canvas" width="600" height="400"/>
-            <div>
+    function updateCanvasContext() {
+        canvas = document.getElementById("canvas");
 
-                <button onClick={() => setDrawingStyle('draw')}>кисть</button>
-                <button onClick={() => setDrawingStyle('line')}>линия</button>
-                <button onClick={() => setDrawingStyle('circle')}>круг</button>
-                {/*<button onClick={() => clearCanvas()}>очистить</button>*/}
+        context = canvas.getContext('2d');
+    }
+
+    return (
+        <div className='canv2'>
+            <div className="canvas_part">
+                <div className='canvases'>
+                    <canvas id="canvasunder" width="600" height="400"/>
+                    <canvas id="canvas" width="600" height="400"/>
+                </div>
+                <div id='drawingstyles'>
+
+                    <button onClick={() => {
+                        updateCanvasContext();
+                        setDrawingStyle('draw')
+                    }}>кисть
+                    </button>
+                    <button onClick={() => {
+                        updateCanvasContext();
+                        setDrawingStyle('circle')
+                    }}>круг
+                    </button>
+                    <button onClick={() => {
+                        updateCanvasContext();
+                        setDrawingStyle('line')
+                    }}>линия
+                    </button>
+                    <button onClick={() => {
+                        updateCanvasContext();
+                        setDrawingStyle('rect')
+                    }}>прямоугольник
+                    </button>
+                    кисть<input type='color'
+                           onChange={(e) => context.strokeStyle = e.target.value}/> {/*<button onClick={() => clearCanvas()}>очистить</button>*/}
+                    заливка<input type='color'
+                           onChange={(e) => context.fillStyle = e.target.value}/> {/*<button onClick={() => clearCanvas()}>очистить</button>*/}
+                    {/*<input id='textDrawingInput' value={drawingText} type="text" onChange={(e)=>{*/}
+                    {/*    console.log('печатаешь.')*/}
+                    {/*    setDrawingText(e.target.value); typingText()}} onClick={(e)=> {*/}
+                    {/*    typingText()*/}
+                    {/*    // e.target.setAttribute('display','none');*/}
+                    {/*}}/>*/}
+                    {/*<button onClick={() => clearCanvas()}>очистить</button>*/}
+                </div>
+                <div id="savedCopyContainer">
+                    {/*<img id="savedImageCopy"/><br/>*/}
+                </div>
+                <div className="Toolbar">
+                    <button onClick={() => saveCanvas()}>Сохранить содержимое Canvas</button>
+                    <button onClick={() => clearCanvas()}>Очистить Canvas</button>
+                    <button onClick={() => playAnimation()}>{isPlaying}</button>
+                    {/*<button onClick={() => testirovka()}>что я насохраняла</button>*/}
+                </div>
             </div>
-            <div id="savedCopyContainer">
-                {/*<img id="savedImageCopy"/><br/>*/}
-            </div>
-            <div className="Toolbar">
-                - Операции-<br/>
-                <button onClick={() => saveCanvas()}>Сохранить содержимое Canvas</button>
-                <button onClick={() => clearCanvas()}>Очистить Canvas</button>
-                <button onClick={() => playAnimation()}>{isPlaying}</button>
-                <button onClick={() => saveAnimation()}>Сохранить мультик</button>
-                <button onClick={() => testirovka()}>что я насохраняла</button>
+            <div className="mult_title_desc">
+                Введите название мультика <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}/>
+                <br/>
+                Описание:
+                <br/>
+
+                <textarea id='mult_desc_creation' value={description} onChange={(e) => setDescription(e.target.value)}/>
+                <button className='saveMult' onClick={() => saveAnimation()}>Сохранить мультик</button>
+
             </div>
         </div>
     );

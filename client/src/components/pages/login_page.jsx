@@ -19,6 +19,7 @@ const LoginPage = (props) => {
                     console.log(`successful ${login} login`)
                     props.setUser(login)
                     localStorage.setItem('login',login)
+                    props.GetUserInfo()
                     navigate('/my_page')
                     break
                 case 1:
@@ -37,14 +38,14 @@ const LoginPage = (props) => {
 
 
     return (
-        <form>
+        <form className='entering'>
             <div className="page_name">Вход</div>
             <label htmlFor="text">Логин</label>
             <input id='text' type='text' value={login} onChange={(e) => setLogin(e.target.value)}/>
             <label htmlFor="pass1">Пароль</label>
             <input id='pass1' type='password' value={password_string}
                    onChange={(e) => setPassword_string(e.target.value)}/>
-            <input type='button' value='Далее' id='btn' onClick={() => Verification(login, password_string)}/>
+             <input type='button' value='Далее' id='btn' onClick={() => Verification(login, password_string)}/>
 
         </form>
     );

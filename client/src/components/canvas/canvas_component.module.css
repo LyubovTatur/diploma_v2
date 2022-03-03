@@ -42,10 +42,10 @@ img {
 
 }
 
-img:hover {
-    border: 2px groove #E4F0FE;
-    background: white;
-}
+/*img:hover {*/
+/*    border: 2px groove #E4F0FE;*/
+/*    background: white;*/
+/*}*/
 
 
 img.Selected {

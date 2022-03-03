@@ -1,109 +1,378 @@
-form{
-    background: rgba(255,255,255,0.1);
-    width: 300px;
-    margin: 50px  auto  ;
-    padding-bottom: 100px;
+form {
+    background: rgba(255, 255, 255, 0.1);
+    width: 60%;
+    margin: 50px auto;
+    padding: 10px;
+    /*padding-bottom: 100px;*/
     /*box-shadow: 1px 7px 19px 4px rgba(150,150,150, 0.4);*/
 
 
 }
-form *{
+
+form * {
     font-size: 20px;
     display: block;
 
 
 }
-input{
+
+input {
     text-align: center;
     font-family: 'Jura', sans-serif;
-    margin: 5px  auto 20px ;
+    margin: 5px auto 20px;
 }
-label{
-text-align: left;
-    margin: 0px 35px ;
+
+label {
+    text-align: left;
+    margin: 0px 35px;
     font-weight: bold;
 }
 
-.page_name{
+.page_name {
     color: white;
     font-size: 42px;
     padding-block: 40px;
     margin-bottom: 20px;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     /*background: url("../../img/paper_bg(2).jpg") no-repeat;*/
     background-size: 300%;
 }
-form{
+
+form {
     box-shadow: 0px 2px 16px 6px rgba(0, 0, 0, 0.7);
 
 }
-input#btn{
+
+input#btn {
     margin-top: 40px;
     min-height: 38px;
     min-width: 130px;
     color: white;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     border: 0px;
 }
-input#btn:hover{
+
+input#btn:hover {
     box-shadow: 0px 1px 10px 2px rgba(255, 255, 255, 0.7);
 
 }
-.mult{
-    width: 300px;
-    height: 200px;
-    background: rgba(255,255,255,0.4);
-    margin: 10px;
-    display: flex;
+
+.mult {
+    width: 270px;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.4);
+    margin: 20px;
+    display: block;
 }
-.mult:hover{
+
+.mult:hover {
     box-shadow: 0px 1px 10px 10px rgba(0, 0, 0, 0.7);
 
 }
-.row_content{
+
+.row_content {
     display: grid;
-    grid-template-columns: 3fr 3fr 3fr 3fr ;
+    grid-template-columns: 3fr 3fr 3fr 3fr;
 }
-.grid_content{
+
+.grid_content {
     margin-inline: 150px;
 }
-.title_main{
+
+.title_main {
     color: white;
     font-size: 40px;
     margin: 50px 30px;
     display: inline;
     /*text-decoration: underline;*/
 }
-.animation_creation{
+
+.animation_creation {
     width: 1200px;
-    margin: 50px auto ;
+    margin: 50px auto;
 
 }
-.canvas_zone{
+
+.canvas_zone {
     /*height: 500px;*/
-    width: 800px;
-    background: rgba(255,255,255,0.56);
+    width: 1200px;
+    background: rgba(255, 255, 255, 0.56);
     display: flex;
 }
-.title_main:hover{
+
+.title_main:hover {
 
 }
-.all_slides{
+
+.all_slides {
     margin-inside: 10%;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
 
 }
-.login{
+
+.login {
     font-size: 20px;
     color: white;
 }
-.login_img{
-    margin: auto ;
+
+.login_img {
+    margin: auto;
     margin-top: 25px;
     min-height: 200px;
     min-width: 200px;
 }
-#playableImg{
-    min-width: 300px;
-    min-height: 200px;
+
+#playableImg {
+    min-width: 263px;
+    min-height: 153px;
+
+}
+
+.pageNum {
+    display: inline;
+    margin: 10px;
+    color: white;
+    font-size: 20px;
+}
+
+.chartMults {
+    max-height: 100px;
+    max-width: 100px;
+}
+
+.multPresImg {
+    min-width: 750px;
+    min-height: 500px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.liked {
+    background: plum;
+}
+
+.notliked {
+    background: gray;
+}
+
+.savedImage {
+    margin: 5px;
+
+}
+
+#savedCopyContainer {
+    display: flex;
+    margin-inline: 70px;
+    overflow-x: auto;
+    max-width: 600px;
+
+}
+
+#savedCopyContainer::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(180deg, #D0368A 0%, #708AD4 99%);
+    box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+    border-radius: 100px;
+}
+
+#canvasunder, .savedImage, .playableImg {
+    background: white;
+}
+
+.canvases {
+    height: 460px;
+    margin-bottom: 10px;
+}
+
+.canvases canvas {
+    position: relative;
+
+}
+
+#canvasunder {
+    position: relative;
+
+    z-index: 1;
+    opacity: 30%;
+}
+
+#canvas {
+    position: relative;
+    top: -580px;
+    z-index: 2;
+    margin-bottom: -500px;
+}
+
+#avatarimage {
+    height: 100px;
+    width: 100px;
+    margin: auto;
+    margin-block: 10px;
+}
+
+.multPresentation {
+    display: grid;
+    grid-template-columns: 6fr 6fr;
+}
+
+.multPresentation * {
+    margin: 30px;
+}
+
+.
+.comment_form {
+    /*min-width: 700px;*/
+    /*padding: 8px;*/
+    /*background: rgba(255,255,255,0.2);*/
+}
+
+.comment {
+    width: 99%;
+    margin: auto;
+    height: 100px;
+}
+
+textarea.comment {
+}
+
+input.comment {
+    margin-top: 8px;
+    height: 40px;
+    width: 150px;
+}
+
+.comment_mult {
+    width: 60%;
+    background: rgba(255, 255, 255, 0.2);
+    margin: auto;
+    margin-block: 10px;
+    font-size: 20px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 4fr 7fr 1fr;
+
+}
+
+.commentator {
+    display: flex;
+
+    font-weight: bold;
+
+}
+
+.comment_text {
+    display: flex;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.comment_date {
+    display: flex;
+    text-align: right;
+    font-size: 13px;
+}
+
+.mult_login, .mult_title, .mult_post_date, .mult_description {
+    color: white;
+    font-size: 30px;
+
+}
+
+.mult_description {
+    background: rgba(255, 255, 255, 0.2);
+    height: 100px;
+    padding: 8px;
+    border-width: 10px;
+    border-radius: 15px;
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 8px;
+    overflow-y: auto;
+}
+
+.entering {
+    width: 300px;
+}
+
+#likebtn {
+
+    min-width: 50px;
+    height: 40px;
+    margin-top: 0px;
+    font-size: 26px;
+    border-radius: 20px;
+}
+
+.input_range {
+    width: 600px;
+    display: inline;
+
+}
+
+.btn_multpres_play {
+    display: flex;
+    font-size: 30px;
+    border-radius: 15px;
+}
+
+.multpres_framecontrols {
+    display: flex;
+}
+
+.creator_part {
+    margin-top: 60px;
+    margin-right: 60px;
+    height: 510px;
+    background: rgba(200, 200, 200, 0.5);
+}
+
+.mult_title_desc input {
+    width: 350px;
+
+}
+
+.mult2_title {
+    color: white;
+
+    font-size: 20px;
+    display: block;
+}
+
+#drawingstyles *{
+    margin-inline: 10px;
+}
+.Toolbar *{
+    font-size: 20px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+#mult_desc_creation {
+    width: 350px;
+    height: 325px;
+}
+
+.canvas_part, .mult_title_desc {
+
+}
+
+.mult_title_desc {
+    padding: 20px;
+    margin: 25px;
+    font-size: 20px;
+}
+
+.canv2 {
+    display: grid;
+    grid-template-columns: 8fr 4fr;
+}
+
+.saveMult {
+    margin-top: 30px;
+    width: 350px;
+
+    font-size: 20px;
+}
+
+* {
+    font-family: 'Jura', sans-serif;
+
 }

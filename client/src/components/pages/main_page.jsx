@@ -11,8 +11,8 @@ const MainPage = (props) => {
             <NavLink to='/main/top' className="title_main">Топ мультфильмов</NavLink>
             <Routes>
 
-                <Route path="/new" element={<NewMults newMults={props.newMults}/>}/>
-                <Route path="/top" element={<TopMults topMults={props.topMults}/>}/>
+                <Route path="/new" element={<NewMults setCurrentMultForPresentation={props.setCurrentMultForPresentation} newMults={props.newMults}/>}/>
+                <Route path="/top" element={<TopMults setCurrentMultForPresentation={props.setCurrentMultForPresentation}  topMults={props.topMults}/>}/>
             </Routes>
         </div>
     );
